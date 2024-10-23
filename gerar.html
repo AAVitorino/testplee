@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TestPlee</title>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="img/logo.jpg" alt="Logo" width="40" height="40" class="d-inline-block align-middle">
+        TestPlee
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Carregar Roteiro</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="gerar.html">Gerar Roteiro</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Formulário para Gerar JSON -->
+  <div class="container mt-5">
+    <h2>Gerar Roteiro de Teste</h2>
+    <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea id="descricao" class="form-control" rows="3" placeholder="Adicione uma descrição aqui..."></textarea>
+    </div>
+    
+    <div id="historias-container" class="mb-3">
+        <h4>Histórias</h4>
+        <div class="input-group mb-2">
+            <input type="text" class="form-control" placeholder="Adicione uma história...">
+            <input type="text" class="form-control" placeholder="ID da História...">
+            <button class="btn btn-danger" type="button" onclick="removeHistoria(this)">X</button>
+        </div>
+    </div>
+    <button class="btn btn-primary mb-3" onclick="addHistoria()">Adicionar História</button>
+
+    <div id="casos-container">
+        <h4>Casos de Teste</h4>
+        <div class="caso-teste mb-3">
+            <div class="input-group mb-2">
+                <input type="text" class="form-control" placeholder="Título do Caso de Teste...">
+                <button class="btn btn-danger" type="button" onclick="removeCaso(this)">X</button>
+            </div>
+            <div class="passos-container">
+                <h5>Passos</h5>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" placeholder="Descrição do Passo...">
+                    <input type="text" class="form-control" placeholder="Resultado Esperado...">
+                    <button class="btn btn-danger" type="button" onclick="removePasso(this)">X</button>
+                </div>
+            </div>
+            <button class="btn btn-primary mb-2" onclick="addPasso(this)">Adicionar Passo</button>
+        </div>
+    </div>
+    <button class="btn btn-primary mb-3" onclick="addCasoTeste()">Adicionar Caso de Teste</button>
+
+    <button class="btn btn-success d-block" onclick="gerarJSON()">Gerar Roteiro JSON</button>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/gerar.js"></script>
+</body>
+</html>

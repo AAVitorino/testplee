@@ -1,0 +1,46 @@
+{
+    "cabecalho": {
+      "nome": "Cenário de Teste de Login",
+      "descricao": "Teste de validação do processo de login do usuário.",
+      "historias": [
+        {
+          "id": "US-123",
+          "descricao": "Como usuário, eu quero fazer login para acessar minha conta."
+        }
+      
+      ]
+    },
+    "casosDeTeste": [
+      {
+        "titulo": "Caso de Teste 1: Login com Credenciais Válidas",
+        "passos": [
+          {
+            "descricao": "Abrir a página de login.",
+            "result": "Página de login carregada com sucesso."
+          },
+          {
+            "descricao": "Inserir nome de usuário e senha.",
+            "result": "Mensagem de sucesso exibida."
+          },
+          {
+            "descricao": "Clicar no botão 'Entrar'.",
+            "result": "Usuário redirecionado para a página inicial."
+          }
+        ]
+      },
+      {
+        "titulo": "Caso de Teste 2: Login com Credenciais Inválidas",
+        "passos": [
+          {
+            "descricao": "Abrir a página de login.",
+            "result": "Página de login carregada com sucesso."
+          },
+          {
+            "descricao": "Inserir nome de usuário inválido e senha.",
+            "result": "Mensagem de erro exibida."
+          }
+        ]
+      }
+    ]
+  }
+  
