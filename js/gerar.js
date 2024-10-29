@@ -108,3 +108,109 @@ function gerarJSON() {
     URL.revokeObjectURL(url); 
 }
 
+async function gerarRelatorio(roteiro) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let yPos = 10;
+
+    roteiro.casosDeTeste.forEach((caso, index) => {
+        // Título do caso de teste
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold")
+        doc.text(`Caso de Teste: ${caso.titulo}`, 10, yPos);
+
+        const textWidth = doc.getTextWidth(`Caso de Teste: ${caso.titulo}`);
+        const lineY = yPos + 2;
+
+        doc.setDrawColor(0);
+        doc.line(10, lineY, 10 + textWidth, lineY);
+        yPos += 10;
+
+        // Cabeçalho da tabela de passos
+        doc.setFont("helvetica", "normal")
+        doc.setFontSize(11);
+        doc.setFillColor(141, 0, 0); 
+        doc.rect(10, yPos, 80, 10, 'F'); 
+        doc.rect(90, yPos, 80, 10, 'F'); 
+        doc.setTextColor(255, 255, 255);
+        doc.text('Passo', 12, yPos + 7); 
+        doc.text('Resultado', 92, yPos + 7); 
+        yPos += 10; 
+
+        // Tabela de passos
+        const passosData = caso.passos.map((passo, passoIndex) => {
+            const status = document.getElementById(`passo-${index}-${passoIndex}`).checked;
+            const descricao = passo.descricao;
+            const resultado = passo.result || '';
+
+            return {
+                descricao,
+                resultado,
+                status,
+            };
+        });
+
+        passosData.forEach((passo) => {
+            // Cor de preenchimento: verde para marcado e vermelho para desmarcado
+            const fillColor = passo.status ? [204, 255, 204] : [255, 204, 204];
+            doc.setFillColor(...fillColor);
+
+            // Célula de "Passo"
+            const passoText = doc.splitTextToSize(passo.descricao, 80 - 4); // Largura da célula - margem
+            const resultadoText = doc.splitTextToSize(passo.resultado, 80 - 4); // Largura da célula - margem
+            const passoHeight = 10 * passoText.length; // Altura com base no texto do passo
+            const resultadoHeight = 10 * resultadoText.length; // Altura com base no texto do resultado
+            const maxHeight = Math.max(passoHeight, resultadoHeight); // Altura máxima entre passo e resultado
+
+            // Preenche a célula "Passo"
+            doc.rect(10, yPos, 80, maxHeight, 'F'); 
+            doc.setTextColor(0, 0, 0);
+            doc.text(passoText, 12, yPos + 7); 
+
+            // Preenche a célula "Resultado"
+            doc.setFillColor(...fillColor); 
+            doc.rect(90, yPos, 80, maxHeight, 'F'); 
+            doc.text(resultadoText, 92, yPos + 7); 
+
+            // Ajusta a posição y com base na altura da célula máxima
+            yPos += maxHeight; 
+        });
+
+        yPos += 10; // Espaço entre os casos de teste
+
+        // Adiciona as evidências logo após a tabela de passos
+        if (caso.evidencias && caso.evidencias.length > 0) {
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold")
+            doc.text('Evidências de teste:', 10, yPos);
+            yPos += 10;
+
+            caso.evidencias.forEach((evidencia) => {
+                //doc.text(`${evidencia.titulo}`, 12, yPos); //Titulo
+                //yPos += 5;
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "bold")
+                doc.text(`${evidencia.descricao}`, 12, yPos); //Descrição
+                yPos += 5;
+
+                if (evidencia.imagem) {
+                    // Adicionar a imagem no PDF
+                    const imgWidth = 180; 
+                    const imgHeight = 120; 
+                    doc.addImage(evidencia.imagem, 'JPEG', 12, yPos, imgWidth, imgHeight);
+                    yPos += imgHeight + 10;
+                }
+            });
+        }
+
+        // Verifica se é necessário adicionar uma nova página
+        if (yPos > 280) {
+            doc.addPage();
+            yPos = 10;
+        }
+    });
+
+    // Salva o PDF
+    doc.save('Relatorio_Teste.pdf');
+}
