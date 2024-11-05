@@ -214,3 +214,72 @@ async function gerarRelatorio(roteiro) {
     // Salva o PDF
     doc.save('Relatorio_Teste.pdf');
 }
+
+
+
+/// GERAR PLANILHA EXCEL
+
+
+
+// Coleta os dados do roteiro
+function coletarDadosRoteiro() {
+    const passos = [];
+    const casosContainer = document.getElementById('casos-container');
+    
+    // Para cada caso de teste
+    casosContainer.querySelectorAll('.caso-teste').forEach(casoDiv => {
+        // Para cada passo dentro do caso de teste
+        casoDiv.querySelectorAll('.passos-container .input-group').forEach(passoDiv => {
+            const passo = {
+                descricao: passoDiv.querySelector('input:nth-child(1)').value,
+                resultadoEsperado: passoDiv.querySelector('input:nth-child(2)').value
+            };
+            passos.push(passo);
+        });
+    });
+    
+    return passos;
+}
+
+
+// Gera e baixa a planilha
+function gerarRoteiroExcel() {
+    const passos = coletarDadosRoteiro(); // Captura os dados dos passos
+    
+    // Configuração inicial dos dados da planilha com os cabeçalhos
+    const worksheetData = [["Status", "Passo", "Resultado Esperado"]];
+
+    // Adiciona os passos e resultados na planilha
+    passos.forEach(passo => {
+        worksheetData.push([
+            "",               // Coluna de checkbox
+            passo.descricao,   // Coluna do passo
+            passo.resultadoEsperado // Coluna do resultado esperado
+        ]);
+    });
+
+    // Cria a planilha e o livro de trabalho para download
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData); // Cria a worksheet
+    const wb = XLSX.utils.book_new(); // Cria um novo workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Roteiro de Teste"); // Adiciona a worksheet ao workbook
+
+    // Gera o arquivo Excel e faz o download
+    XLSX.writeFile(wb, "Roteiro_de_Teste.xlsx");
+}
+
+
+document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+    item.addEventListener('click', function() {
+        formatoSelecionado = this.getAttribute('data-formato');
+        document.getElementById('dropdownMenuButton').textContent = `Formato: ${formatoSelecionado.toUpperCase()}`;
+    });
+});
+
+// Event listener para o botão de download, chamando a função correta com base no formato selecionado
+document.getElementById("downloadRoteiro").addEventListener("click", function() {
+    if (formatoSelecionado === 'excel') {
+        gerarRoteiroExcel();
+    } else if (formatoSelecionado === 'json') {
+        gerarJSON(); // Usa a função existente para gerar JSON
+    }
+});
